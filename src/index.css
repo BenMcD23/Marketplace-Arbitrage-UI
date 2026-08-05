@@ -1,0 +1,112 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   Design tokens.
+
+   Colours are declared as roles, not hexes, so light and dark swap in one
+   place and every component is written against meaning ("surface", "series-1")
+   rather than a literal colour. The categorical series slots and their dark
+   steps come from a palette validated for colour-vision deficiency separation
+   and contrast against these exact surfaces — the dark column is the same hues
+   re-stepped for the dark surface, not an automatic inversion.
+--------------------------------------------------------------------------- */
+
+@theme {
+  --font-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-plane: #f4f4f2;
+  --color-surface: #ffffff;
+  --color-surface-2: #fafaf9;
+  --color-hairline: #e4e4e0;
+  --color-grid: #ebebe7;
+
+  --color-ink: #0b0b0b;
+  --color-ink-2: #52514e;
+  --color-muted: #898781;
+
+  --color-series-1: #2a78d6;
+  --color-series-2: #eb6834;
+  --color-series-3: #1baf7a;
+
+  --color-good: #0ca30c;
+  --color-warning: #fab219;
+  --color-serious: #ec835a;
+  --color-critical: #d03b3b;
+  --color-good-ink: #006300;
+
+  --color-accent: #2a78d6;
+}
+
+/* The theme toggle stamps data-theme on <html>; it must beat the OS setting in
+   both directions, so the media query is scoped to "not explicitly light". */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-plane: #0d0d0f;
+    --color-surface: #131316;
+    --color-surface-2: #191920;
+    --color-hairline: #26262c;
+    --color-grid: #232329;
+
+    --color-ink: #ffffff;
+    --color-ink-2: #c3c2b7;
+    --color-muted: #8a8a92;
+
+    --color-series-1: #3987e5;
+    --color-series-2: #d95926;
+    --color-series-3: #199e70;
+
+    --color-good-ink: #0ca30c;
+    --color-accent: #3987e5;
+  }
+}
+
+:root[data-theme='dark'] {
+  --color-plane: #0d0d0f;
+  --color-surface: #131316;
+  --color-surface-2: #191920;
+  --color-hairline: #26262c;
+  --color-grid: #232329;
+
+  --color-ink: #ffffff;
+  --color-ink-2: #c3c2b7;
+  --color-muted: #8a8a92;
+
+  --color-series-1: #3987e5;
+  --color-series-2: #d95926;
+  --color-series-3: #199e70;
+
+  --color-good-ink: #0ca30c;
+  --color-accent: #3987e5;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  background: var(--color-plane);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Columns of figures must line up; standalone numbers should not be forced to. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 1.4s linear infinite;
+}
+
+/* Recharts injects its own focus outline on the surface; suppress it so only
+   real keyboard focus shows a ring. */
+.recharts-wrapper:focus,
+.recharts-surface:focus {
+  outline: none;
+}
