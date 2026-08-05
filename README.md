@@ -53,6 +53,11 @@ The point of the whole UI. For any deal it shows:
 - **The risk** — chance of selling, expected days to sell, cost of the capital
   tied up, and what the profit becomes if the item sells at the pessimistic end
   of its range.
+- **The guaranteed floor** — where CeX will buy the item, the cash they'll pay
+  and the profit that locks in. Deals already in profit at that price carry a
+  `floor` badge in the table and a banner in the panel, because they don't
+  depend on any prediction being right. Filter the list to just those with
+  **Guaranteed only**.
 - **How it was valued** — whether the price came from observed sales or from
   discounted asking prices, the comps that set it, how much they disagreed, and
   a count of what was thrown out and why (accessories, wrong capacity, wrong

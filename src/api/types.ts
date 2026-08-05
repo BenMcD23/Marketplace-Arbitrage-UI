@@ -2,7 +2,7 @@
 
 export type Condition = 'new' | 'used' | 'for_parts' | 'unknown'
 export type SellChannel = 'ebay' | 'amazon'
-export type PriceBasis = 'sold' | 'active' | 'amazon' | 'none'
+export type PriceBasis = 'sold' | 'cex' | 'active' | 'amazon' | 'none'
 export type RunStatus = 'running' | 'complete' | 'failed'
 
 export interface Listing {
@@ -42,6 +42,9 @@ export interface Valuation {
   confidence: number
   sell_through_pct: number | null
   est_days_to_sell: number | null
+  cex_sell_price: number | null
+  cex_cash_price: number | null
+  cex_match: string | null
   amazon_price: number | null
   amazon_rank: number | null
   sample: CompRef[]
@@ -65,6 +68,7 @@ export interface Deal {
   confidence: number
   score: number
   worst_case_profit: number
+  floor_profit: number | null
   is_scam_flag: boolean
   reasons: string[]
   flagged_at: string
@@ -182,5 +186,6 @@ export interface DealQuery {
   source?: string
   search?: string
   include_scams?: boolean
+  guaranteed_only?: boolean
   days?: number
 }

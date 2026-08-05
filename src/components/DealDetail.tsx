@@ -68,6 +68,20 @@ export function DealDetail({ id, onClose }: { id: string; onClose: () => void })
 
               <Headline deal={deal} />
 
+              {deal.floor_profit !== null && deal.floor_profit > 0 && (
+                <div className="rounded-lg border border-good/25 bg-good/10 px-3 py-2.5 text-sm">
+                  <p className="font-semibold text-good-ink">
+                    Guaranteed profit of {money(deal.floor_profit)}
+                  </p>
+                  <p className="mt-0.5 text-ink-2">
+                    CeX will pay {money(deal.valuation?.cex_cash_price)} cash for this
+                    {deal.valuation?.cex_match ? ` (${deal.valuation.cex_match})` : ''}. You
+                    clear that much without it having to sell on {deal.sell_channel} at all —
+                    everything above is upside.
+                  </p>
+                </div>
+              )}
+
               <Section title="The money">
                 <Row label="Buy price" value={money(deal.listing?.price)} />
                 <Row label="Postage in" value={money(deal.listing?.shipping)} />
@@ -107,11 +121,23 @@ export function DealDetail({ id, onClose }: { id: string; onClose: () => void })
                   tone="good"
                   hint="what to rank on — profit weighted by the chance of selling"
                 />
+                {deal.floor_profit !== null && (
+                  <Row
+                    label="Guaranteed floor (CeX cash)"
+                    value={money(deal.floor_profit)}
+                    tone={deal.floor_profit > 0 ? 'good' : 'bad'}
+                    hint="not an estimate — what CeX will pay you today"
+                  />
+                )}
                 <Row
                   label="If it sells badly"
                   value={money(deal.worst_case_profit)}
                   tone={deal.worst_case_profit < 0 ? 'bad' : undefined}
-                  hint="profit at the pessimistic end of the resale range"
+                  hint={
+                    deal.floor_profit !== null && deal.floor_profit > deal.worst_case_profit
+                      ? 'the better of the pessimistic resale and the CeX floor'
+                      : 'profit at the pessimistic end of the resale range'
+                  }
                 />
               </Section>
 
@@ -202,6 +228,16 @@ function ValuationPanel({ valuation }: { valuation: Valuation }) {
       />
       {valuation.sell_through_pct !== null && (
         <Row label="Sell-through" value={percent(valuation.sell_through_pct, 1)} />
+      )}
+      {valuation.cex_sell_price !== null && (
+        <>
+          <Row
+            label="CeX sells it for"
+            value={money(valuation.cex_sell_price)}
+            hint={valuation.cex_match ?? undefined}
+          />
+          <Row label="CeX pays you" value={money(valuation.cex_cash_price)} />
+        </>
       )}
 
       {valuation.sample?.length > 0 && (

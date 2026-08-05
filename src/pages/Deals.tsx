@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, ExternalLink, Search, Tag } from 'lucide-react'
+import { ArrowDown, ArrowUp, ExternalLink, Search, ShieldCheck, Tag } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
@@ -20,6 +20,7 @@ const SORTS = [
   { value: 'confidence', label: 'Confidence' },
   { value: 'flagged_at', label: 'Newest' },
   { value: 'buy_cost', label: 'Buy cost' },
+  { value: 'floor_profit', label: 'Guaranteed floor' },
 ]
 
 const COLUMNS: { key: string; label: string; sort?: string; align?: 'right' }[] = [
@@ -42,6 +43,7 @@ export function Deals() {
   const [order, setOrder] = useState<'asc' | 'desc'>('desc')
   const [minProfit, setMinProfit] = useState('')
   const [includeScams, setIncludeScams] = useState(false)
+  const [guaranteedOnly, setGuaranteedOnly] = useState(false)
   const [page, setPage] = useState(0)
 
   const query: DealQuery = useMemo(
@@ -53,8 +55,9 @@ export function Deals() {
       search: search || undefined,
       min_profit: minProfit ? Number(minProfit) : undefined,
       include_scams: includeScams,
+      guaranteed_only: guaranteedOnly,
     }),
-    [page, sort, order, search, minProfit, includeScams],
+    [page, sort, order, search, minProfit, includeScams, guaranteedOnly],
   )
 
   const { data, isLoading, isError, error, isPlaceholderData } = useDeals(query)
@@ -122,6 +125,20 @@ export function Deals() {
           options={SORTS}
           ariaLabel="Sort by"
         />
+        <label
+          className="flex items-center gap-2 text-sm text-ink-2"
+          title="Only deals already in profit at CeX's guaranteed cash price"
+        >
+          <Toggle
+            checked={guaranteedOnly}
+            onChange={(value) => {
+              setGuaranteedOnly(value)
+              setPage(0)
+            }}
+            label="Guaranteed profit only"
+          />
+          Guaranteed only
+        </label>
         <label className="flex items-center gap-2 text-sm text-ink-2">
           <Toggle checked={includeScams} onChange={setIncludeScams} label="Show scam flags" />
           Show scam flags
@@ -219,6 +236,12 @@ function DealRow({ deal, onOpen }: { deal: Deal; onOpen: () => void }) {
       <td className="w-full max-w-0 px-3 py-2.5">
         <div className="flex items-center gap-2">
           {deal.is_scam_flag && <Badge tone="critical">flag</Badge>}
+          {deal.floor_profit !== null && deal.floor_profit > 0 && (
+            <Badge tone="good">
+              <ShieldCheck size={10} />
+              floor
+            </Badge>
+          )}
           <div className="min-w-0">
             <p className="truncate text-ink">{listing?.title ?? deal.listing_id}</p>
             <p className="truncate text-xs text-muted">

@@ -72,6 +72,7 @@ export const conditionLabel: Record<string, string> = {
 
 export const basisLabel: Record<string, string> = {
   sold: 'Observed sales',
+  cex: 'CeX used price',
   active: 'Active listings',
   amazon: 'Amazon (Keepa)',
   none: 'No data',
@@ -79,6 +80,7 @@ export const basisLabel: Record<string, string> = {
 
 export const basisHelp: Record<string, string> = {
   sold: 'Priced from listings we watched sell — the strongest evidence available.',
+  cex: "Priced from what CeX charges for the same used product, discounted to a private-sale level.",
   active: 'Priced from current asking prices, discounted towards a realistic sale price.',
   amazon: 'Priced from Amazon data via Keepa.',
   none: 'Not enough comparable listings to price this.',
@@ -90,5 +92,6 @@ export const rejectLabel: Record<string, string> = {
   capacity_mismatch: 'Different storage capacity',
   for_parts: 'Sold for parts',
   low_relevance: 'Not the same product',
+  model_mismatch: 'A different model number',
   no_price: 'No usable price',
 }
